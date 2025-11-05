@@ -3,9 +3,10 @@ SCOPE_STACK = []
 from ..typing import Initializer
 from .._api import export
 import tensorflow as tf
-from typing import Any
+from typing import Any, Dict
 
 def clear_scope():
+    global VARIABLE_REGISTRY, SCOPE_STACK
     VARIABLE_REGISTRY = {}
     SCOPE_STACK = []
 
@@ -34,32 +35,72 @@ class variable_scope:
 def variables_in_scope(scope_name):
     return {k: v for k, v in VARIABLE_REGISTRY.items() if k.startswith(scope_name + "/")}
 
-def get_variable(name: str, shape=None, initializer:Initializer=lambda: None, dtype:tf.DType=tf.float32, rng=None):
 
-    shape = shape or []
+class VariableScopeModule(tf.Module):
+    def __init__(self):
+        super().__init__()
+        self.registry = {}
 
-    full_scope = "/".join(scope for scope, _ in SCOPE_STACK) if SCOPE_STACK else ""
-    full_name = f"{full_scope}/{name}" if full_scope else name
+    def get_variable(self, name, shape, initializer, dtype=tf.float32):
+        if name not in self.registry:
+            self.registry[name] = tf.Variable(
+                initializer(shape=shape, dtype=dtype),
+                name=name,
+                trainable=True
+            )
+        return self.registry[name]
 
-    # Determine if reuse is allowed from current scope stack
-    reuse_allowed = any(r for _, r in SCOPE_STACK)
+GLOBAL_SCOPE = VariableScopeModule()
 
-    # Variable already exists
-    if full_name in VARIABLE_REGISTRY:
-        if not reuse_allowed:
-            raise ValueError(f"Variable {full_name} already exists, but reuse is False")
-        return VARIABLE_REGISTRY[full_name]
+def get_variable(name, shape=None, initializer=lambda **_: None, dtype=tf.float32):
+    return GLOBAL_SCOPE.get_variable(name, shape, initializer, dtype)
 
-    # Variable does not exist but reuse is requested
-    if reuse_allowed:
-        raise ValueError(f"Variable {full_name} does not exist, cannot reuse")
+def get_full_name(name):
+    full_scope = "/".join(s for s, _ in SCOPE_STACK)
+    return f"{full_scope}/{name}" if full_scope else name
 
-    # Otherwise, create a new variable
-    try:
-        data = initializer(shape=shape, dtype=dtype, key=rng)
-    except TypeError:
-        data = initializer(shape=shape, dtype=dtype)
+def build(fn):
+    built = False
+    def wrapper(*args, **kwargs):
+        nonlocal built
+        if not built:
+            result = fn(*args, **kwargs)
+            built = True
+            return result
+        else:
+            # Reuse variables: disable reset
+            SCOPE_STACK[-1] = (SCOPE_STACK[-1][0], True)
+            return fn(*args, **kwargs)
+    return wrapper
 
-    out = tf.Variable(data, trainable=True, name=name)
-    VARIABLE_REGISTRY[full_name] = out
-    return out 
+
+# def get_variable(name: str, shape=None, initializer:Initializer=lambda: None, dtype:tf.DType=tf.float32, rng=None): #type:ignore
+
+#     shape = shape or []
+
+#     full_scope = "/".join(scope for scope, _ in SCOPE_STACK) if SCOPE_STACK else ""
+#     full_name = f"{full_scope}/{name}" if full_scope else name
+
+#     # Determine if reuse is allowed from current scope stack
+#     reuse_allowed = any(r for _, r in SCOPE_STACK)
+
+#     # Variable already exists
+#     if full_name in VARIABLE_REGISTRY:
+#         if not reuse_allowed:
+#             raise ValueError(f"Variable {full_name} already exists, but reuse is False")
+#         return VARIABLE_REGISTRY[full_name]
+
+#     # Variable does not exist but reuse is requested
+#     if reuse_allowed:
+#         raise ValueError(f"Variable {full_name} does not exist, cannot reuse")
+
+#     # Otherwise, create a new variable
+#     try:
+#         data = initializer(shape=shape, dtype=dtype, key=rng)
+#     except TypeError:
+#         data = initializer(shape=shape, dtype=dtype)
+
+#     out = tf.Variable(data, trainable=True, name=name)
+#     VARIABLE_REGISTRY[full_name] = out
+#     return out 
+

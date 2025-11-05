@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Protocol, Any
 import tensorflow as tf
 
 class Initializer(Protocol):
