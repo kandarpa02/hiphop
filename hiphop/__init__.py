@@ -7,4 +7,5 @@ from ._src.module.base import Module
 from ._src.initializers.initializer import VarianceScaling, TruncatedNormal, Constant
 
 from ._src.layers.functional.dense import dense
+from ._src.layers.Linear import Linear
 from ._src.backward import valgrad, grad, jit_compile
