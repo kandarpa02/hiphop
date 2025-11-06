@@ -149,9 +149,9 @@ The goal is to build a TensorFlow-native framework that is:
 ## Author
 
 **Kandarpa Sarkar** |
-kandarpaexe@gmail.com |
+kandarpaexe@gmail.com 
 
-Developer of HipHop — aiming to make TensorFlow flexible again.
+Developer of **HipHop** — aiming to make TensorFlow flexible again.
 
 ---
 
