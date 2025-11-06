@@ -8,4 +8,5 @@ from ._src.initializers.initializer import VarianceScaling, TruncatedNormal, Con
 
 from ._src.layers.functional.dense import dense
 from ._src.layers.Linear import Linear
+from ._src.layers.TensorOps import Flatten
 from ._src.backward import valgrad, grad, jit_compile
