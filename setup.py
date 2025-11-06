@@ -10,9 +10,9 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/kandarpa02/hiphop",
     packages=find_packages(),
-    install_requires=[
-        "tensorflow>=2.15,<2.21",
-    ],
+    # install_requires=[
+    #     "tensorflow>=2.15,<2.21",
+    # ],
     python_requires=">=3.9",
     classifiers=[
         "Development Status :: 3 - Alpha",
