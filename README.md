@@ -116,6 +116,12 @@ for epoch in range(EPOCHS):
 
 ## Installation
 
+### With pypi
+```bash
+pip install hiphop
+```
+
+### To inspect the setup and make changes
 ```bash
 git clone https://github.com/kandarpa02/hiphop.git
 cd hiphop
