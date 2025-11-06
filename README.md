@@ -136,7 +136,7 @@ TensorFlow >= 2.15
 **HipHop** is currently in alpha.
 The goal is to build a TensorFlow-native framework that is:
 
-- as minimal and functional as JAX/Haiku,
+- feels like **PyTorch**
 
 - but fully compatible with TensorFlow’s runtime and ecosystem.
 
