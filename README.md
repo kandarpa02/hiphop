@@ -6,7 +6,7 @@
 
 ## Overview
 
-HipHop is a lightweight, developer-friendly abstraction over TensorFlow that gives you the power of raw `tf.Module` without the boilerplate.
+HipHop is a lightweight, developer-friendly abstraction over [TensorFlow 2](https://www.tensorflow.org/) that gives you the power of raw `tf.Module` without the boilerplate.
 
 Unlike Keras, which hides too much and enforces rigid patterns, HipHop keeps everything explicit and functional — you control the variables, scopes, and computation.
 
