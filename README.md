@@ -126,7 +126,6 @@ pip install -e .
 
 ```
 Python >= 3.9
-
 TensorFlow >= 2.15
 ```
 ---
