@@ -11,7 +11,7 @@ setup(
     url="https://github.com/kandarpa02/hiphop",
     packages=find_packages(),
     install_requires=[
-        "tensorflow>=2.15,<2.18",
+        "tensorflow>=2.15,<2.21",
     ],
     python_requires=">=3.9",
     classifiers=[
