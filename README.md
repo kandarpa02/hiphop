@@ -152,3 +152,9 @@ The goal is to build a TensorFlow-native framework that is:
 kandarpaexe@gmail.com |
 
 Developer of HipHop — aiming to make TensorFlow flexible again.
+
+---
+
+## License
+
+MIT License
