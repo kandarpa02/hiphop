@@ -3,11 +3,65 @@ import tensorflow as tf
 
 
 class Module(tf.Module):
-    def __init__(self, name=None):
-        super().__init__(name)
+    """Base class for all neural network components in HipHop.
 
-    def _variable_naming(self, prefix=""):
+    This class serves as a thin, minimal wrapper around `tf.Module`,
+    providing a clean and consistent API for defining trainable parameters
+    and composing models in an object-oriented manner.
+
+    Each subclass of `Module` should override the `__call__` method to
+    implement the forward computation. Variables should be created using
+    the `get_variable()` method to ensure consistent naming and management.
+
+    Example:
+        ```python
+        import hiphop as hh
+        import tensorflow as tf
+
+        class Linear(hh.Module):
+            def __init__(self, in_features, out_features, name=None):
+                super().__init__(name)
+                self.w = self.get_variable(
+                    "w", [in_features, out_features],
+                    initializer=tf.random.normal
+                )
+                self.b = self.get_variable(
+                    "b", [out_features],
+                    initializer=tf.zeros
+                )
+
+            def __call__(self, x):
+                return tf.matmul(x, self.w) + self.b
+        ```
+
+    Attributes:
+        name (str): Optional name for the module. Used for variable scoping.
+    """
+
+    def __init__(self, name=None):
+        """Initializes a new HipHop module.
+
+        Args:
+            name: Optional string name for the module. If provided, it is used
+                as a scope prefix for variables created within this module.
+        """
+        super().__init__(name)
+        
+
+    def _variable_naming(self, prefix: str = "") -> str:
+        """Constructs a fully-qualified variable prefix.
+
+        This ensures all variables created inside the module are properly
+        namespaced under the module's name.
+
+        Args:
+            prefix: Optional prefix string to prepend.
+
+        Returns:
+            A fully-qualified name prefix, e.g. `"mlp/dense1/"`.
+        """
         return f"{prefix}{self.name}/" if self.name else prefix
+
 
     def get_variable(
         self,
@@ -16,18 +70,93 @@ class Module(tf.Module):
         initializer=lambda **_: None,
         dtype: tf.DType = tf.float32,
         rng=None,
-        prefix=""
-    ):
+        prefix: str = ""
+    ) -> tf.Variable:
+        """Creates and registers a trainable variable within the module.
+
+        This is the recommended method to create learnable parameters such as
+        weights and biases. It ensures consistent naming, dtype handling, and
+        optional RNG seeding for reproducible initialization.
+
+        Args:
+            name: Name of the variable (without scope prefix).
+            shape: Shape of the variable as a tuple or list. Defaults to `[]`
+                for scalars.
+            initializer: A callable that returns initial values given keyword
+                arguments `(shape, dtype, key)`. The function may optionally
+                ignore the `key` argument.
+            dtype: TensorFlow data type of the variable (default: `tf.float32`).
+            rng: Optional random key or RNG object passed to the initializer.
+            prefix: Optional prefix to override the automatic scope naming.
+
+        Returns:
+            A `tf.Variable` instance registered under this module.
+
+        Example:
+            ```python
+            w = self.get_variable("w", [128, 64],
+                                  initializer=tf.random.normal)
+            ```
+        """
         full_name = f"{self._variable_naming(prefix)}{name}"
         shape = shape or []
+
         try:
             data = initializer(shape=shape, dtype=dtype, key=rng)
         except TypeError:
+            # Handle initializers that do not accept `key`
             data = initializer(shape=shape, dtype=dtype)
-        var = tf.Variable(data, dtype=dtype, trainable=True)
+
+        var = tf.Variable(data, dtype=dtype, trainable=True, name=full_name)
         setattr(self, name, var)
         return var
-    
+
+
     def __call__(self, *args):
+        """Defines the forward computation.
+
+        This method must be implemented by subclasses. It is called when
+        the module instance is invoked as a function.
+
+        Example:
+            ```python
+            class MyLayer(hh.Module):
+                def __call__(self, x):
+                    return x * 2
+            ```
+
+        Raises:
+            NotImplementedError: If not overridden in a subclass.
+        """
         raise NotImplementedError
-    
+
+    # -------------------------------------------------------------------------
+    # Variable access
+    # -------------------------------------------------------------------------
+
+    @property
+    def variables(self):
+        """Returns all variables owned by this module and its submodules.
+
+        This property is identical to `tf.Module.variables`, but kept here
+        for API consistency within HipHop.
+
+        Returns:
+            A list of `tf.Variable` instances.
+        """
+        variables = super().variables
+        return variables
+
+    @property
+    def trainable_variables(self):
+        """Returns all trainable variables owned by this module and its children.
+
+        This property is identical to `tf.Module.trainable_variables`, but
+        exposed here to maintain clarity when writing optimizers and training
+        loops.
+
+        Returns:
+            A list of trainable `tf.Variable` instances.
+        """
+        trainable_variables = super().trainable_variables
+        return trainable_variables

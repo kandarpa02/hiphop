@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 _REQUIRED_MIN_VERSION = (2, 15)
-_REQUIRED_MAX_VERSION = (2, 18)
+_REQUIRED_MAX_VERSION = (2, 21)
 
 def _check_tf_version():
     version = tuple(map(int, tf.__version__.split('.')[:2]))
