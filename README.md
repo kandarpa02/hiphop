@@ -100,17 +100,15 @@ for epoch in range(EPOCHS):
 
 ## Key Features
 
-- hh.Module: Minimal, subclassable replacement for tf.Module.
+- `hh.Module`: Minimal, subclassable replacement for tf.Module.
 
-- get_variable: Explicit, name-scoped variable creation.
+- `get_variable`: Explicit, name-scoped variable creation.
 
 - Clean integration with tf.GradientTape and tf.function.
 
-- @hh.jit_compile: Decorator for XLA-accelerated execution.
+- `@hh.jit_compile`: Decorator for XLA-accelerated execution.
 
 - Familiar layer primitives (hh.Linear, hh.Flatten, etc.).
-
-- Transparent variable naming and scoping system.
 
 - No hidden training loops — you define the behavior.
 
@@ -150,6 +148,7 @@ The goal is to build a TensorFlow-native framework that is:
 
 ## Author
 
-Kandarpa Sarkar
-kandarpaexe@gmail.com
+**Kandarpa Sarkar** |
+kandarpaexe@gmail.com |
+
 Developer of HipHop — aiming to make TensorFlow flexible again.
