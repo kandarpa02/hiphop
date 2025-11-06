@@ -8,8 +8,8 @@ class Flatten(Module):
         self.dim = preserve_dims
 
     def __call__(self, x):
-        shape = x.shape
+        shape = tf.shape(x)
         pre = shape[:self.dim]
-        next = shape[len(pre):]
-        Shape = pre + (int(tf.reduce_prod(next)),)
-        return tf.reshape(x, Shape)
+        next = shape[self.dim:]
+        new_shape = tf.concat([pre, [tf.reduce_prod(next)]], axis=0)
+        return tf.reshape(x, new_shape)
