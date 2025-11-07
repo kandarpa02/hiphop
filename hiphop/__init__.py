@@ -14,11 +14,15 @@ def _check_tf_version():
 
 _check_tf_version()
 
-from ._src.base import variable_scope, variables_in_scope, get_variable, clear_scope, build
-from ._src.module.module import Module, Sequential
+from ._src.module import Module, Sequential
 from ._src.initializers.initializer import VarianceScaling, TruncatedNormal, Constant
 from ._src.functional import *
+
 from ._src.layers.Activations import *
 from ._src.layers.Linear import Linear
+from ._src.layers.Conv import Conv1d, Conv2d, Conv3d
+from ._src.layers.BatchNorm import BatchNorm1d, BatchNorm2d, BatchNorm3d
+from ._src.layers.LayerNorm import LayerNorm
 from ._src.layers.TensorOps import Flatten
+
 from ._src.backward import valgrad, grad, jit_compile
