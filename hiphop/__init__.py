@@ -14,7 +14,10 @@ def _check_tf_version():
 
 _check_tf_version()
 
-from ._src.module import Module, Sequential
+from ._src.module import Module
+from ._src.Sequential import Sequential
+from ._src.mlp import MLP
+
 from ._src.initializers.initializer import VarianceScaling, TruncatedNormal, Constant
 from ._src.functional import *
 
