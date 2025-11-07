@@ -1,4 +1,4 @@
-from ..._src.module.base import Module
+from ..module import Module
 from ..initializers.initializer import Constant, VarianceScaling
 import tensorflow as tf
 from ...typing import Initializer

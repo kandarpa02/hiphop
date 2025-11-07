@@ -1,4 +1,4 @@
-from ..._src.module.base import Module
+from ..module import Module
 import tensorflow as tf
 
 

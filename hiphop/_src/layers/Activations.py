@@ -1,8 +1,8 @@
 from ..functional import *
-from ..module import base
+from ..module import Module
 import tensorflow as tf
 
-class ReLU(base.Module):
+class ReLU(Module):
     """Applies the ReLU (Rectified Linear Unit) activation function.
 
     Computes:
@@ -25,7 +25,7 @@ class ReLU(base.Module):
         return relu(x)
 
 
-class LeakyReLU(base.Module):
+class LeakyReLU(Module):
     """Applies the Leaky ReLU activation function.
 
     Computes:
@@ -43,7 +43,7 @@ class LeakyReLU(base.Module):
         return leaky_relu(x, alpha=self.alpha)
 
 
-class GELU(base.Module):
+class GELU(Module):
     """Applies the Gaussian Error Linear Unit (GELU) activation.
 
     Formula:
@@ -64,7 +64,7 @@ class GELU(base.Module):
         return gelu(x)
 
 
-class ELU(base.Module):
+class ELU(Module):
     """Applies the Exponential Linear Unit (ELU) activation function.
 
     Computes:
@@ -85,7 +85,7 @@ class ELU(base.Module):
         return y
 
 
-class SELU(base.Module):
+class SELU(Module):
     """Applies the Scaled Exponential Linear Unit (SELU) activation.
 
     Automatically normalizes mean and variance when used with
@@ -107,7 +107,7 @@ class SELU(base.Module):
         return selu(x)
 
 
-class Softplus(base.Module):
+class Softplus(Module):
     """Applies the Softplus activation function.
 
     Computes:
@@ -122,7 +122,7 @@ class Softplus(base.Module):
         return softplus(x)
 
 
-class Softsign(base.Module):
+class Softsign(Module):
     """Applies the Softsign activation function.
 
     Computes:
@@ -135,7 +135,7 @@ class Softsign(base.Module):
         return softsign(x)
 
 
-class Sigmoid(base.Module):
+class Sigmoid(Module):
     """Applies the Sigmoid activation function.
 
     Computes:
@@ -148,7 +148,7 @@ class Sigmoid(base.Module):
         return sigmoid(x)
 
 
-class Tanh(base.Module):
+class Tanh(Module):
     """Applies the hyperbolic tangent activation function.
 
     Computes:
@@ -161,7 +161,7 @@ class Tanh(base.Module):
         return tanh(x)
 
 
-class Swish(base.Module):
+class Swish(Module):
     """Applies the Swish (SiLU) activation function.
 
     Computes:
@@ -176,7 +176,7 @@ class Swish(base.Module):
         return swish(x)
 
 
-class SiLU(base.Module):
+class SiLU(Module):
     """Alias for Swish activation (SiLU = Sigmoid Linear Unit).
 
     Computes:
@@ -189,7 +189,7 @@ class SiLU(base.Module):
         return silu(x)
 
 
-class Softmax(base.Module):
+class Softmax(Module):
     """Applies the Softmax function over a given dimension.
 
     Converts raw logits into normalized probabilities.

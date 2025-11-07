@@ -15,7 +15,7 @@ def _check_tf_version():
 _check_tf_version()
 
 from ._src.base import variable_scope, variables_in_scope, get_variable, clear_scope, build
-from ._src.module.base import Module, Sequential
+from ._src.module.module import Module, Sequential
 from ._src.initializers.initializer import VarianceScaling, TruncatedNormal, Constant
 from ._src.functional import *
 from ._src.layers.Activations import *
